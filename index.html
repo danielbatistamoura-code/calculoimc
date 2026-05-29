@@ -1,340 +1,769 @@
 <!DOCTYPE html>
-<!-- Declaração HTML5 - indica ao navegador para usar o modo padrão mais recente -->
+<!--
+    Declaração DOCTYPE:
+    - Informa ao navegador que este documento usa HTML5 (a versão mais recente)
+    - Sem esta declaração, navegadores antigos poderiam usar "modo quirks" (modo de compatibilidade)
+    - Deve ser a PRIMEIRA linha do documento, antes de qualquer tag ou espaço em branco
+-->
 
 <html lang="pt-br">
-<!-- Elemento raiz com idioma definido como português do Brasil -->
+<!--
+    Tag raiz do documento HTML
+    Atributo lang="pt-br":
+    - Define o idioma principal da página como português do Brasil
+    - Útil para leitores de tela (acessibilidade para pessoas com deficiência visual)
+    - Ajuda mecanismos de busca (SEO) a entenderem o idioma do conteúdo
+    - Pode afetar a hifenização e correção ortográfica em navegadores
+-->
 
 <head>
-    <!-- Metadados e configurações da página -->
+    <!--
+        A seção HEAD contém METADADOS (dados sobre dados)
+        Nada dentro do HEAD é visível diretamente na página
+        Mas é crucial para funcionamento, SEO e compatibilidade
+    -->
     
     <meta charset="UTF-8">
-    <!-- Define a codificação como UTF-8 para suportar acentos e caracteres especiais -->
+    <!--
+        Meta tag de codificação de caracteres
+        UTF-8 é o padrão universal que suporta:
+        - Caracteres especiais (ç, á, é, í, ó, ú, â, ê, ô, ã, õ)
+        - Símbolos (⚖️, 📏, 💡, ❌, ✅)
+        - Emojis (😀, 🎉, ✨)
+        - Caracteres de praticamente todos os idiomas do mundo
+        Sem esta tag, acentos e emojis apareceriam como caracteres estranhos (�)
+    -->
     
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <!-- Faz o site ser responsivo em dispositivos móveis:
-         width=device-width = largura igual à largura da tela do dispositivo
-         initial-scale=1.0 = zoom inicial normal -->
+    <!--
+        Meta tag de viewport - CRUCIAL para responsividade em dispositivos móveis
+        Atributos:
+        - width=device-width: define a largura da viewport como igual à largura real da tela do dispositivo
+          (sem isso, dispositivos móveis simulam uma tela de desktop de 980px)
+        - initial-scale=1.0: define o zoom inicial como 100% (sem zoom)
+        
+        Benefícios:
+        - Site fica legível em celulares sem necessidade de zoom manual
+        - Layouts responsivos funcionam corretamente
+        - Melhor experiência do usuário em dispositivos móveis
+    -->
     
     <title>Calculadora de IMC Profissional</title>
-    <!-- Título que aparece na aba do navegador -->
+    <!--
+        Tag TITLE:
+        - Define o título que aparece na ABA do navegador
+        - Aparece nos resultados de busca (Google, Bing, etc.)
+        - É o primeiro contato do usuário com seu site
+        - Importante para SEO (Search Engine Optimization)
+        - Aparece quando a página é adicionada aos favoritos
+        - Máximo recomendado: 50-60 caracteres para não ser cortado
+    -->
     
     <style>
         /* ============================================ */
         /* ESTILOS CSS - Toda a aparência da calculadora */
         /* ============================================ */
+        /*
+            CSS (Cascading Style Sheets) controla a APARÊNCIA visual
+            Cores, fontes, tamanhos, posicionamentos, animações...
+            
+            Estrutura de uma regra CSS:
+            seletor {
+                propriedade: valor;
+                propriedade2: valor2;
+            }
+        */
         
         /* Reset básico - remove margens e preenchimentos padrão */
         * {
+            /*
+                Seletor universal (*) - APLICA A TODOS OS ELEMENTOS da página
+                Isso remove inconsistências entre navegadores
+                Cada navegador tem margens padrão diferentes - este reset uniformiza
+            */
             margin: 0;
+            /* Remove todas as margens externas padrão */
+            
             padding: 0;
+            /* Remove todos os preenchimentos internos padrão */
+            
             box-sizing: border-box;
-            /* Faz com que padding e border não aumentem o tamanho do elemento */
+            /*
+                Propriedade box-sizing:
+                - border-box: faz com que padding e border NÃO aumentem o tamanho do elemento
+                - Exemplo: width:100px + padding:10px = continua 100px (reduz o conteúdo)
+                - Sem border-box: width:100px + padding:10px = 120px (aumenta o elemento)
+                
+                Facilita muito o cálculo de layouts responsivos!
+            */
         }
         
         /* Estilização do corpo da página */
         body {
+            /*
+                Seletor BODY - estiliza o elemento <body> que contém todo o conteúdo visível
+            */
+            
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            /* Define fontes modernas em ordem de preferência */
+            /*
+                Propriedade font-family: define a(s) fonte(s) a serem usadas
+                Ordem de prioridade (fallback):
+                - 'Segoe UI': fonte moderna do Windows (melhor opção)
+                - Tahoma: alternativa para Windows antigo
+                - Geneva: alternativa para Mac
+                - Verdana: boa legibilidade em telas
+                - sans-serif: família genérica (sem serifa) - última opção
+                
+                A vírgula separa as opções. Se a primeira não existir, usa a segunda, etc.
+            */
+            
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            /* Gradiente diagonal do roxo claro ao roxo escuro */
+            /*
+                background: define fundo com gradiente (degradê)
+                linear-gradient(135deg, ...):
+                - 135deg: ângulo diagonal (canto inferior esquerdo para superior direito)
+                - #667eea: cor inicial (roxo claro)
+                - 0%: posição da primeira cor
+                - #764ba2: cor final (roxo escuro)
+                - 100%: posição da última cor
+                
+                Resultado: um gradiente suave do roxo claro para o roxo escuro
+                em diagonal, criando profundidade visual
+            */
+            
             min-height: 100vh;
-            /* Altura mínima de 100% da viewport (janela do navegador) */
+            /*
+                min-height: altura mínima
+                vh (viewport height): unidade relativa à altura da tela
+                100vh = 100% da altura da janela do navegador
+                
+                Garante que o body tenha pelo menos a altura da tela toda,
+                mesmo que o conteúdo seja pequeno
+            */
+            
             display: flex;
-            /* Ativa flexbox para centralização */
+            /*
+                display: flex - ativa o FLEXBOX (modelo de layout moderno)
+                Permite alinhar e distribuir espaço entre itens de forma flexível
+                Alternativa moderna a floats e posicionamentos absolutos
+            */
+            
             justify-content: center;
-            /* Centraliza horizontalmente */
+            /*
+                justify-content: alinhamento no EIXO PRINCIPAL (horizontal quando flex-direction é row)
+                center: centraliza os itens filhos horizontalmente
+                Opções: flex-start (esquerda), flex-end (direita), space-between, space-around
+            */
+            
             align-items: center;
-            /* Centraliza verticalmente */
+            /*
+                align-items: alinhamento no EIXO CRUZADO (vertical quando flex-direction é row)
+                center: centraliza os itens filhos verticalmente
+                
+                Combinado com justify-content: center -> centralização PERFEITA em ambos eixos!
+            */
+            
             padding: 20px;
-            /* Espaçamento interno */
+            /*
+                padding: espaçamento INTERNO (dentro do body)
+                20px em todos os lados (superior, direito, inferior, esquerdo)
+                Garante que o conteúdo não encoste nas bordas da tela
+            */
         }
         
         /* Container principal do card */
         .calculator-container {
+            /*
+                Seletor de CLASSE (começa com .)
+                Se aplica a elementos com class="calculator-container"
+                Classes podem ser reutilizadas (diferente de IDs que são únicos)
+            */
+            
             background: white;
-            /* Fundo branco para contraste */
+            /* Fundo branco para contraste com o gradiente do body */
+            
             border-radius: 30px;
-            /* Bordas bem arredondadas */
+            /*
+                border-radius: arredondamento das bordas
+                30px: cantos arredondados de 30 pixels
+                Valores maiores = cantos mais arredondados
+                50% = círculo perfeito
+            */
+            
             box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
-            /* Sombra para dar profundidade */
+            /*
+                box-shadow: cria sombra ao redor do elemento
+                Sintaxe: offset-x offset-y blur-radius cor
+                0: deslocamento horizontal (0 = centrado)
+                20px: deslocamento vertical (20px para baixo)
+                60px: raio de desfoque (quanto maior, mais suave)
+                rgba(0,0,0,0.3): cor preta com 30% de opacidade (0.3 = 30% opaco)
+                
+                Cria uma sombra suave que dá profundidade (efeito flutuante)
+            */
+            
             padding: 40px;
-            /* Espaçamento interno */
+            /* Espaçamento interno de 40px em todos os lados */
+            
             max-width: 550px;
-            /* Largura máxima */
+            /*
+                max-width: largura MÁXIMA
+                Responsividade: nunca ultrapassa 550px
+                Em telas menores, reduz automaticamente
+            */
+            
             width: 100%;
-            /* Largura responsiva */
+            /* Largura total (respeitando max-width) */
+            
             transition: transform 0.3s ease;
-            /* Animação suave ao passar mouse */
+            /*
+                transition: animação suave quando propriedades mudam
+                transform: propriedade que será animada
+                0.3s: duração da animação (300 milissegundos)
+                ease: curva de aceleração (começa devagar, acelera, termina devagar)
+                
+                Quando transform mudar (ex: hover), muda suavemente em 0.3 segundos
+            */
         }
         
         /* Efeito ao passar o mouse sobre o container */
         .calculator-container:hover {
+            /*
+                Pseudo-classe :hover
+                Ativa quando o mouse está SOBRE o elemento
+                Cria interatividade e feedback visual
+            */
+            
             transform: translateY(-5px);
-            /* Move o card 5px para cima */
+            /*
+                transform: transforma o elemento
+                translateY(-5px): move 5 pixels para CIMA (Y negativo = sobe)
+                Como tem transition:0.3s, o movimento é suave e animado
+                
+                Efeito: o card "flutua" quando o mouse passa por cima
+            */
         }
         
         /* Título principal */
         h1 {
+            /* Seletor de TAG - aplica a todos os elementos <h1> */
+            
             color: #333;
-            /* Cor cinza escuro */
+            /* Cor cinza escuro (hexadecimal: 33 = 51 em decimal, RGB 51,51,51) */
+            
             text-align: center;
-            /* Texto centralizado */
+            /* Centraliza o texto horizontalmente */
+            
             font-size: 2.2em;
-            /* Tamanho relativo ao elemento pai */
+            /*
+                font-size: tamanho da fonte
+                2.2em = 2.2 vezes o tamanho padrão do elemento pai
+                em é unidade relativa que respeita acessibilidade
+                (aumenta se usuário aumentar zoom da fonte)
+            */
+            
             margin-bottom: 10px;
-            /* Margem inferior */
+            /* Margem APENAS na parte inferior (10px) */
         }
         
         /* Subtítulo */
         .subtitle {
             text-align: center;
+            /* Centralizado */
+            
             color: #666;
             /* Cinza médio */
+            
             margin-bottom: 30px;
-            /* Espaçamento inferior */
+            /* Espaçamento inferior maior que o título */
+            
             font-size: 0.95em;
+            /* Um pouco menor que o padrão (95%) */
         }
         
         /* Estilo para cada grupo de input */
         .input-group {
             margin-bottom: 25px;
-            /* Espaçamento entre grupos */
+            /* Espaçamento entre grupos de campos */
         }
         
         /* Estilo dos rótulos (labels) */
         label {
             display: block;
-            /* Ocupa toda a largura disponível */
+            /*
+                display: block = ocupa 100% da largura disponível
+                Força o label a ficar em sua própria linha
+                (vs inline padrão)
+            */
+            
             margin-bottom: 8px;
             /* Espaço abaixo do label */
+            
             color: #555;
+            /* Cinza */
+            
             font-weight: 600;
-            /* Negrito */
+            /*
+                font-weight: espessura da fonte
+                600 = semi-negrito (normal é 400, negrito é 700)
+            */
+            
             font-size: 0.95em;
         }
         
         /* Container com ícone e input (para efeito visual) */
         .input-wrapper {
             display: flex;
+            /* Ativa flexbox para alinhar ícone e input lado a lado */
+            
             align-items: center;
+            /* Centraliza verticalmente */
+            
             border: 2px solid #e0e0e0;
+            /*
+                border: borda sólida de 2 pixels
+                #e0e0e0 = cinza claro
+            */
+            
             border-radius: 12px;
+            /* Bordas levemente arredondadas */
+            
             transition: all 0.3s ease;
+            /* Anima TODAS as propriedades que mudarem */
+            
             background: white;
+            /* Fundo branco */
         }
         
         /* Efeito focus no container do input */
         .input-wrapper:focus-within {
+            /*
+                Pseudo-classe :focus-within
+                Ativa quando QUALQUER elemento DENTRO deste container está com foco
+                Útil para destacar todo o grupo quando input está ativo
+            */
+            
             border-color: #667eea;
-            /* Muda cor da borda */
+            /* Muda cor da borda para roxo */
+            
             box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
-            /* Efeito de brilho */
+            /*
+                box-shadow com espalhamento (spread)
+                0 0 0 3px = sem deslocamento, espalhamento de 3px
+                Efeito: cria um "brilho" roxo ao redor do input
+                rgba(102,126,234,0.1) = roxo com 10% de opacidade
+            */
         }
         
         /* Ícone dentro do input */
         .input-icon {
             padding: 12px;
+            /* Espaçamento interno de 12px ao redor do ícone */
+            
             color: #999;
+            /* Cinza */
+            
             font-size: 1.2em;
+            /* Um pouco maior que o padrão */
         }
         
         /* Estilo do campo de input */
         input {
             flex: 1;
-            /* Ocupa espaço restante */
+            /*
+                flex: 1 - faz o input ocupar TODO o espaço restante no flex container
+                (o ícone já ocupou seu espaço, input ocupa o resto)
+            */
+            
             padding: 12px 12px 12px 0;
-            /* Padding direito e esquerdo */
+            /*
+                padding: superior | direito | inferior | esquerdo
+                12px em cima, 12px direita, 12px em baixo, 0 na esquerda
+                (esquerda 0 porque ícone já dá espaçamento)
+            */
+            
             border: none;
-            /* Remove borda padrão */
+            /* Remove borda padrão do input */
+            
             font-size: 16px;
+            /* Tamanho mínimo recomendado para evitar zoom em mobile */
+            
             outline: none;
-            /* Remove outline azul padrão */
+            /*
+                outline: remove o contorno azul padrão quando input está focado
+                (mas substituímos pelo efeito no .input-wrapper:focus-within)
+            */
+            
             background: transparent;
-            /* Fundo transparente */
+            /* Fundo transparente (deixa mostrar o fundo branco do wrapper) */
         }
         
         /* Botão de calcular */
         button {
             width: 100%;
-            /* Largura total */
+            /* Largura total do container pai */
+            
             padding: 16px;
-            /* Espaçamento interno */
+            /* Espaçamento interno vertical de 16px */
+            
             background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            /* Gradiente igual ao fundo */
+            /* Mesmo gradiente do body para consistência visual */
+            
             color: white;
+            /* Texto branco */
+            
             border: none;
+            /* Remove borda padrão */
+            
             border-radius: 12px;
+            /* Bordas arredondadas */
+            
             font-size: 16px;
+            /* Tamanho da fonte */
+            
             font-weight: bold;
+            /* Negrito */
+            
             cursor: pointer;
-            /* Muda cursor para mãozinha */
+            /*
+                cursor: pointer - muda o cursor para uma "mãozinha"
+                Indica que é clicável (feedback visual)
+            */
+            
             transition: transform 0.2s ease, box-shadow 0.2s ease;
+            /*
+                Anima duas propriedades:
+                - transform: para movimento (hover)
+                - box-shadow: para sombra (hover)
+                Duração: 0.2 segundos
+            */
+            
             margin-top: 10px;
+            /* Margem superior de 10px */
         }
         
         /* Efeito ao passar mouse no botão */
         button:hover {
             transform: translateY(-2px);
-            /* Sobe um pouco */
+            /* Sobe 2 pixels (efeito de flutuar) */
+            
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-            /* Adiciona sombra */
+            /* Adiciona sombra mais pronunciada */
         }
         
         /* Efeito ao clicar no botão */
         button:active {
             transform: translateY(0);
-            /* Volta ao normal */
+            /*
+                :active = quando o mouse está PRESSIONADO (clicando)
+                Volta à posição original (sem movimento)
+                Cria sensação de "afundar" quando clica
+            */
         }
         
         /* Área de resultados */
         .result-area {
             margin-top: 30px;
+            /* Espaço acima */
+            
             padding: 20px;
+            /* Espaçamento interno */
+            
             border-radius: 15px;
+            /* Bordas arredondadas */
+            
             display: none;
-            /* Inicialmente escondido */
+            /*
+                display: none - elemento INVISÍVEL e NÃO ocupa espaço
+                (diferente de visibility: hidden que ocupa espaço)
+                Inicialmente escondido até ter resultado
+            */
         }
         
         /* Classe para mostrar o resultado */
         .result-area.show {
             display: block;
+            /* Torna visível como block (elemento em bloco) */
+            
             animation: slideIn 0.5s ease;
-            /* Animação ao aparecer */
+            /*
+                animation: nome duração timing-function
+                slideIn: nome da animação (definida em @keyframes abaixo)
+                0.5s: duração de meio segundo
+                ease: aceleração suave
+                
+                Aplica animação de entrada quando elemento aparece
+            */
         }
         
         /* Animação de entrada */
         @keyframes slideIn {
+            /*
+                @keyframes define uma ANIMAÇÃO CUSTOMIZADA
+                slideIn: nome da animação
+                from: estado inicial
+                to: estado final
+                Animação: opacidade 0 -> 1 e desliza de baixo para cima
+            */
             from {
                 opacity: 0;
+                /* Começa totalmente transparente */
+                
                 transform: translateY(20px);
+                /* Começa 20px abaixo da posição final */
             }
             to {
                 opacity: 1;
+                /* Termina totalmente opaco */
+                
                 transform: translateY(0);
+                /* Termina na posição original */
             }
         }
         
         /* Cores de fundo diferentes para cada classificação */
         .result-area.abaixo-peso {
+            /* Seletor composto: .result-area QUE TAMBÉM TEM .abaixo-peso */
             background: linear-gradient(135deg, #ffeaa7 0%, #fdcb6e 100%);
+            /* Gradiente amarelo/laranja */
             border-left: 5px solid #f39c12;
+            /* Borda esquerda colorida para destaque */
         }
         
         .result-area.normal {
             background: linear-gradient(135deg, #d4edda 0%, #a3e4d7 100%);
+            /* Gradiente verde (saudável) */
             border-left: 5px solid #27ae60;
+            /* Borda verde */
         }
         
         .result-area.sobrepeso {
             background: linear-gradient(135deg, #ffeaa7 0%, #f8c291 100%);
+            /* Gradiente amarelo/laranja claro */
             border-left: 5px solid #e67e22;
+            /* Borda laranja */
         }
         
         .result-area.obesidade {
             background: linear-gradient(135deg, #f8d7da 0%, #f5b7b1 100%);
+            /* Gradiente vermelho/rosa (alerta) */
             border-left: 5px solid #e74c3c;
+            /* Borda vermelha (urgente) */
         }
         
         /* Valor do IMC grande */
         .imc-value {
             font-size: 2.5em;
+            /* 2.5x maior que o padrão (destaque) */
+            
             font-weight: bold;
+            /* Negrito */
+            
             text-align: center;
+            /* Centralizado */
+            
             margin-bottom: 10px;
+            /* Espaço abaixo */
         }
         
         /* Classificação do IMC */
         .imc-classification {
             text-align: center;
+            /* Centralizado */
+            
             font-size: 1.3em;
+            /* 1.3x maior que o padrão */
+            
             font-weight: 600;
+            /* Semi-negrito */
+            
             margin-bottom: 15px;
+            /* Espaço abaixo */
         }
         
         /* Mensagem de recomendação */
         .recommendation {
             text-align: center;
+            /* Centralizado */
+            
             padding: 10px;
+            /* Espaçamento interno */
+            
             background: rgba(255, 255, 255, 0.5);
+            /*
+                rgba(255,255,255,0.5): branco com 50% de opacidade
+                Fundo semi-transparente (deixa a cor de fundo aparecer)
+            */
+            
             border-radius: 10px;
+            /* Bordas arredondadas */
+            
             margin-top: 15px;
+            /* Espaço acima */
         }
         
         /* Informações adicionais */
         .info-text {
             text-align: center;
+            /* Centralizado */
+            
             font-size: 0.85em;
+            /* Um pouco menor que o padrão */
+            
             color: #555;
+            /* Cinza */
+            
             margin-top: 15px;
+            /* Espaço acima */
+            
             padding-top: 15px;
+            /* Espaço interno acima */
+            
             border-top: 1px solid rgba(0, 0, 0, 0.1);
+            /*
+                border-top: borda APENAS na parte superior
+                rgba(0,0,0,0.1) = preto com 10% opacidade (quase transparente)
+                Cria uma linha divisória sutil
+            */
         }
         
         /* Área de erro */
         .error-area {
             background-color: #f8d7da;
+            /* Vermelho claro (fundo de alerta) */
+            
             color: #721c24;
+            /* Vermelho escuro (texto de alerta) */
+            
             padding: 15px;
+            /* Espaçamento interno */
+            
             border-radius: 12px;
+            /* Bordas arredondadas */
+            
             margin-top: 20px;
+            /* Espaço acima */
+            
             text-align: center;
+            /* Centralizado */
+            
             display: none;
+            /* Inicialmente invisível */
+            
             border-left: 5px solid #dc3545;
+            /* Borda vermelha (ênfase) */
         }
         
         /* Mostrar erro */
         .error-area.show {
             display: block;
+            /* Torna visível quando tem classe 'show' */
+            
             animation: shake 0.5s ease;
-            /* Animação de tremor */
+            /* Animação de tremor (chama atenção) */
         }
         
         /* Animação de tremor para erro */
         @keyframes shake {
+            /*
+                keyframes shake = faz o elemento tremer horizontalmente
+                0% e 100%: posição original
+                25%: move 5px para ESQUERDA
+                75%: move 5px para DIREITA
+                Resultado: vai e volta rapidamente
+            */
             0%, 100% { transform: translateX(0); }
+            /* Início e fim na posição normal */
+            
             25% { transform: translateX(-5px); }
+            /* 25% do tempo: move para esquerda */
+            
             75% { transform: translateX(5px); }
+            /* 75% do tempo: move para direita */
         }
         
         /* Botão de limpar */
         .clear-btn {
             background: #95a5a6;
+            /* Cinza padrão */
+            
             margin-top: 10px;
+            /* Espaço acima (separação) */
+            
             background: linear-gradient(135deg, #95a5a6 0%, #7f8c8d 100%);
+            /* Gradiente cinza (menos chamativo que o de calcular) */
         }
         
         /* Responsividade para telas pequenas */
         @media (max-width: 480px) {
+            /*
+                MEDIA QUERY - estilos condicionais baseados no tamanho da tela
+                max-width: 480px = aplica apenas quando tela tem 480px ou MENOS
+                (celulares em retrato, smartphones pequenos)
+                
+                Estratégia chamada "mobile-first" ou adaptação responsiva
+            */
+            
             .calculator-container {
                 padding: 25px;
+                /* Reduz padding em telas pequenas */
             }
             
             h1 {
                 font-size: 1.5em;
+                /* Título menor em mobile */
             }
             
             .imc-value {
                 font-size: 1.8em;
+                /* IMC menor em mobile */
             }
         }
     </style>
 </head>
 
 <body>
+    <!--
+        CORPO DA PÁGINA - todo conteúdo VISÍVEL vai aqui
+    -->
+    
     <!-- Container principal da calculadora -->
+    <!--
+        div = divisão genérica (elemento de bloco sem significado semântico)
+        class="calculator-container" = aplica os estilos CSS definidos acima
+    -->
     <div class="calculator-container">
         
         <!-- Título -->
+        <!--
+            h1 = heading nível 1 (título mais importante da página)
+            Apenas UM h1 por página (SEO)
+            Emoji ⚖️ = balança (contextual com IMC)
+        -->
         <h1>⚖️ Calculadora de IMC</h1>
         
         <!-- Subtítulo explicativo -->
+        <!-- div com class="subtitle" para estilização -->
         <div class="subtitle">Índice de Massa Corporal - Organização Mundial da Saúde</div>
         
         <!-- Campo para peso -->
         <div class="input-group">
+            <!-- label: rótulo associado ao input -->
             <label>📊 Peso (kg)</label>
+            
+            <!-- div wrapper para efeito visual (ícone + input) -->
             <div class="input-wrapper">
+                <!-- span: elemento inline para o ícone -->
                 <span class="input-icon">⚖️</span>
+                
+                <!--
+                    input type="number":
+                    - input numérico com controles de incremento/decremento
+                    - id="peso": identificador único (para referência no JavaScript)
+                    - placeholder: texto de exemplo interno
+                    - step="0.1": incrementos de 0.1 em 0.1 (permite decimais)
+                    - autocomplete="off": desativa autocompletar do navegador
+                -->
                 <input type="number" id="peso" placeholder="Exemplo: 70.5" step="0.1" autocomplete="off">
             </div>
         </div>
@@ -344,23 +773,42 @@
             <label>📏 Altura (m)</label>
             <div class="input-wrapper">
                 <span class="input-icon">📏</span>
+                <!-- step="0.01": permite centímetros (ex: 1.75) -->
                 <input type="number" id="altura" placeholder="Exemplo: 1.75" step="0.01" autocomplete="off">
             </div>
         </div>
         
-        <!-- Botão principal de calcular -->
+        <!--
+            Botão principal de calcular
+            onclick="calcularIMC()": evento JavaScript chamado quando clica
+            Chama a função calcularIMC() definida no <script>
+        -->
         <button onclick="calcularIMC()">Calcular IMC</button>
         
         <!-- Botão para limpar campos -->
+        <!--
+            onclick="limparCampos()": chama função JS para limpar tudo
+            class="clear-btn": estilo específico para este botão
+            style="margin-top: 10px;": estilo inline (sobrescreve para espaçamento)
+        -->
         <button onclick="limparCampos()" class="clear-btn" style="margin-top: 10px;">Limpar campos</button>
         
-        <!-- Área onde o resultado será exibido -->
+        <!--
+            Área onde o resultado será exibido DINAMICAMENTE via JavaScript
+            id="resultado": identificador para o JS encontrar e modificar
+            class="result-area": estilos CSS predefinidos
+            Inicialmente vazio e invisível (display: none no CSS)
+        -->
         <div id="resultado" class="result-area"></div>
         
-        <!-- Área para mensagens de erro -->
+        <!--
+            Área para mensagens de erro
+            id="erro": identificador para o JS
+            class="error-area": estilos de erro
+        -->
         <div id="erro" class="error-area"></div>
         
-        <!-- Informações adicionais do sistema -->
+        <!-- Informações adicionais (dica) -->
         <div class="info-text">
             💡 Dica: Você também pode pressionar ENTER para calcular
         </div>
@@ -371,13 +819,25 @@
     <!-- ============================================ -->
     
     <script>
+        /*
+            JAVASCRIPT - Linguagem de programação que roda no navegador
+            Toda a LÓGICA, CÁLCULOS e INTERATIVIDADE da página
+            O código só executa quando a página já carregou
+        */
+        
         // ============================================
         // FUNÇÃO PRINCIPAL PARA CALCULAR O IMC
         // ============================================
         
+        // Declaração da função: function nome(parâmetros) { código }
         function calcularIMC() {
-            // Obtém os valores dos campos de input
-            // parseFloat converte texto para número decimal
+            // ========================================
+            // OBTENÇÃO DOS VALORES (entrada de dados)
+            // ========================================
+            
+            // document.getElementById('peso') - encontra o elemento HTML com esse ID
+            // .value - obtém o valor digitado (sempre é string/texto)
+            // parseFloat() - converte string para número decimal (float)
             const peso = parseFloat(document.getElementById('peso').value);
             const altura = parseFloat(document.getElementById('altura').value);
             
@@ -385,22 +845,27 @@
             const resultadoDiv = document.getElementById('resultado');
             const erroDiv = document.getElementById('erro');
             
-            // Limpa resultados anteriores (remove classes de exibição)
+            // Limpa resultados anteriores
+            // classList.remove('show') - remove a classe 'show' (esconde elemento)
             resultadoDiv.classList.remove('show');
             erroDiv.classList.remove('show');
+            
+            // Limpa conteúdo HTML do resultado (innerHTML = string vazia)
             resultadoDiv.innerHTML = '';  // Limpa conteúdo HTML
             
             // ============================================
             // VALIDAÇÕES DOS DADOS DE ENTRADA
             // ============================================
+            // Verificações para garantir que os dados são válidos antes de calcular
             
-            // Verifica se os campos estão vazios ou não são números
+            // isNaN() verifica se NÃO É NÚMERO (Not a Number)
+            // Se peso ou altura não forem números válidos (string vazia, texto, etc.)
             if (isNaN(peso) || isNaN(altura)) {
                 exibirErro('❌ Por favor, preencha ambos os campos com números válidos!');
                 return;  // Sai da função, não continua o cálculo
             }
             
-            // Verifica se peso e altura são positivos
+            // Verifica se peso e altura são positivos (não podem ser zero ou negativo)
             if (peso <= 0 || altura <= 0) {
                 exibirErro('❌ Peso e altura devem ser maiores que zero!');
                 return;
@@ -423,51 +888,69 @@
             // ============================================
             
             // Fórmula: IMC = peso ÷ (altura × altura)
+            // Operador ** é exponenciação (altura ** 2 = altura ao quadrado)
             const imc = peso / (altura * altura);
             
-            // Arredonda para 2 casas decimais
-            // toFixed(2) converte para string com 2 casas decimais
+            // toFixed(2): converte para string com EXATAMENTE 2 casas decimais
+            // Ex: 24.56789 -> "24.57" (arredonda automaticamente)
             const imcArredondado = imc.toFixed(2);
             
             // ============================================
             // CLASSIFICAÇÃO DO IMC
             // ============================================
+            // Estrutura if-else if-else (cadeia de condições)
+            // Executa o PRIMEIRO bloco cuja condição for verdadeira
             
-            let classificacao = '';
-            let classeCSS = '';
-            let recomendacao = '';
-            let cor = '';
+            let classificacao = '';  // String vazia inicial
+            let classeCSS = '';      // Nome da classe CSS para cor de fundo
+            let recomendacao = '';   // Mensagem personalizada
+            let cor = '';            // (não usado aqui, mas mantido da versão terminal)
             
-            // Estrutura if-else para classificar baseado no valor do IMC
+            // IMC menor que 16 - Magreza Grau III (crítico)
             if (imc < 16) {
                 classificacao = 'Magreza grau III';
                 classeCSS = 'abaixo-peso';
                 recomendacao = '🚨 SITUAÇÃO CRÍTICA! Procure um médico URGENTEMENTE!';
-            } else if (imc < 17) {
+            } 
+            // IMC entre 16 e 16.9 - Magreza Grau II
+            // NOTA: não precisa verificar >=16 porque o if anterior já excluiu <16
+            else if (imc < 17) {
                 classificacao = 'Magreza grau II';
                 classeCSS = 'abaixo-peso';
                 recomendacao = '⚠️ Baixo peso severo. Consulte um nutricionista com urgência!';
-            } else if (imc < 18.5) {
+            } 
+            // IMC entre 17 e 18.49 - Magreza Grau I
+            else if (imc < 18.5) {
                 classificacao = 'Magreza grau I';
                 classeCSS = 'abaixo-peso';
                 recomendacao = '⚠️ Você está abaixo do peso ideal. Busque orientação profissional!';
-            } else if (imc < 25) {
+            } 
+            // IMC entre 18.5 e 24.9 - Peso Normal (ideal)
+            else if (imc < 25) {
                 classificacao = 'Peso normal (saudável)';
                 classeCSS = 'normal';
                 recomendacao = '✅ Excelente! Mantenha hábitos saudáveis com alimentação equilibrada e exercícios físicos!';
-            } else if (imc < 30) {
+            } 
+            // IMC entre 25 e 29.9 - Sobrepeso
+            else if (imc < 30) {
                 classificacao = 'Sobrepeso';
                 classeCSS = 'sobrepeso';
                 recomendacao = '⚠️ Atenção! Considere melhorar seus hábitos alimentares e praticar atividades físicas.';
-            } else if (imc < 35) {
+            } 
+            // IMC entre 30 e 34.9 - Obesidade Grau I
+            else if (imc < 35) {
                 classificacao = 'Obesidade grau I';
                 classeCSS = 'obesidade';
                 recomendacao = '⚠️ Obesidade moderada. Procure um médico e nutricionista para orientação!';
-            } else if (imc < 40) {
+            } 
+            // IMC entre 35 e 39.9 - Obesidade Grau II
+            else if (imc < 40) {
                 classificacao = 'Obesidade grau II';
                 classeCSS = 'obesidade';
                 recomendacao = '⚠️ Obesidade severa. É fundamental buscar ajuda médica especializada!';
-            } else {
+            } 
+            // IMC maior ou igual a 40 - Obesidade Grau III (mórbida)
+            else {
                 classificacao = 'Obesidade grau III (mórbida)';
                 classeCSS = 'obesidade';
                 recomendacao = '🚨 URGENTE! Obesidade mórbida. Procure atendimento médico imediatamente!';
@@ -477,7 +960,8 @@
             // EXIBIÇÃO DO RESULTADO
             // ============================================
             
-            // Constrói o HTML do resultado
+            // Template literals (${...}) - interpolação de variáveis
+            // Constrói o HTML dinamicamente
             resultadoDiv.innerHTML = `
                 <div class="imc-value">
                     IMC = ${imcArredondado}
@@ -494,10 +978,14 @@
                 </div>
             `;
             
-            // Adiciona as classes CSS para estilização e animação
+            // classList.add() - adiciona classes CSS ao elemento
+            // 'show' - torna o elemento visível
+            // classeCSS - aplica cor de fundo específica (abaixo-peso, normal, etc.)
             resultadoDiv.classList.add('show', classeCSS);
             
-            // Rola a página suavemente até o resultado (se estiver fora da view)
+            // scrollIntoView() - rola a página até que o elemento esteja visível
+            // behavior: 'smooth' - rolagem suave (animada)
+            // block: 'nearest' - rola o mínimo necessário para mostrar
             resultadoDiv.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
             
             // ============================================
@@ -511,19 +999,22 @@
         // FUNÇÃO PARA EXIBIR MENSAGENS DE ERRO
         // ============================================
         
+        // Função que recebe uma mensagem e mostra na área de erro
         function exibirErro(mensagem) {
-            // Obtém o elemento de erro
+            // Obtém o elemento de erro pelo ID
             const erroDiv = document.getElementById('erro');
             
-            // Define o texto do erro
+            // textContent = conteúdo de texto (seguro, não interpreta HTML)
             erroDiv.textContent = mensagem;
             
-            // Adiciona classe para mostrar com animação
+            // Adiciona classe 'show' para tornar visível (com animação)
             erroDiv.classList.add('show');
             
-            // Opcional: esconde o erro automaticamente após 5 segundos
+            // setTimeout() - executa uma função APÓS um tempo (em milissegundos)
+            // 5000ms = 5 segundos
             setTimeout(() => {
-                erroDiv.classList.remove('show');
+                // Arrow function () => { ... } - função anônima de seta
+                erroDiv.classList.remove('show');  // Esconde o erro após 5 segundos
             }, 5000);
         }
         
@@ -532,20 +1023,23 @@
         // ============================================
         
         function limparCampos() {
-            // Limpa os valores dos inputs
+            // Limpa os valores dos inputs (seta para string vazia)
             document.getElementById('peso').value = '';
             document.getElementById('altura').value = '';
             
             // Limpa e esconde a área de resultado
             const resultadoDiv = document.getElementById('resultado');
-            resultadoDiv.innerHTML = '';
+            resultadoDiv.innerHTML = '';  // Remove conteúdo HTML
+            
+            // classList.remove() - remove várias classes de uma vez
             resultadoDiv.classList.remove('show', 'abaixo-peso', 'normal', 'sobrepeso', 'obesidade');
             
             // Esconde erro
             const erroDiv = document.getElementById('erro');
             erroDiv.classList.remove('show');
             
-            // Foco volta para o campo peso
+            // focus() - coloca o cursor/foco no campo peso
+            // Melhor experiência: usuário não precisa clicar de novo
             document.getElementById('peso').focus();
         }
         
@@ -553,40 +1047,57 @@
         // FUNÇÃO PARA SALVAR NO HISTÓRICO LOCAL (localStorage)
         // ============================================
         
+        // localStorage - armazenamento persistente no navegador
+        // Os dados ficam salvos mesmo após fechar o navegador
+        // Capacidade ~5-10MB por site
+        
         function salvarNoHistorico(peso, altura, imc, classificacao) {
             try {
-                // Verifica se o navegador suporta localStorage
+                // typeof(Storage) !== "undefined" - verifica se navegador suporta localStorage
                 if (typeof(Storage) !== "undefined") {
-                    // Obtém o histórico existente ou cria um array vazio
+                    // localStorage.getItem() - recupera dados salvos (retorna string)
                     let historico = localStorage.getItem('historicoIMC');
+                    
                     if (historico === null) {
+                        // Se não existe histórico, cria array vazio
                         historico = [];
                     } else {
-                        historico = JSON.parse(historico);  // Converte de JSON para objeto
+                        // JSON.parse() - converte string JSON de volta para objeto/array
+                        // Ex: '{"nome":"João"}' -> {nome: "João"}
+                        historico = JSON.parse(historico);
                     }
                     
                     // Cria objeto com os dados do cálculo atual
                     const registro = {
-                        data: new Date().toLocaleString('pt-BR'),  // Data e hora atual formatada
+                        data: new Date().toLocaleString('pt-BR'),
+                        // new Date(): data/hora atual
+                        // toLocaleString('pt-BR'): formata como brasileiro
+                        // Exemplo: "15/12/2024 14:30:25"
+                        
                         peso: peso,
                         altura: altura,
                         imc: imc,
                         classificacao: classificacao
+                        // Shorthand property: peso: peso é igual a simplesmente peso
+                        // (quando nome da propriedade é igual à variável)
                     };
                     
-                    // Adiciona ao início do histórico
+                    // unshift() - adiciona ao INÍCIO do array (mais recente primeiro)
+                    // push() adicionaria ao final
                     historico.unshift(registro);
                     
-                    // Mantém apenas os últimos 20 registros
+                    // Mantém apenas os últimos 20 registros (não acumular infinito)
                     if (historico.length > 20) {
+                        // slice(0, 20) - pega elementos do índice 0 até 19 (primeiros 20)
                         historico = historico.slice(0, 20);
                     }
                     
-                    // Salva de volta no localStorage (convertendo para JSON)
+                    // JSON.stringify() - converte objeto/array para string JSON
+                    // localStorage.setItem() - salva no armazenamento local
                     localStorage.setItem('historicoIMC', JSON.stringify(historico));
                 }
             } catch(e) {
-                // Se houver erro ao salvar (ex: localStorage cheio), não faz nada
+                // console.log() - imprime no console do desenvolvedor (F12)
                 console.log('Não foi possível salvar no histórico:', e);
             }
         }
@@ -599,9 +1110,10 @@
             try {
                 if (typeof(Storage) !== "undefined") {
                     const historico = localStorage.getItem('historicoIMC');
-                    if (historico && historico !== '[]') {
+                    if (historico && historico !== '[]') {  // && significa "E"
                         const registros = JSON.parse(historico);
                         console.log('=== HISTÓRICO DE CÁLCULOS ===');
+                        // forEach() - itera sobre cada elemento do array
                         registros.forEach((reg, index) => {
                             console.log(`${index + 1}. ${reg.data} - IMC: ${reg.imc} (${reg.classificacao})`);
                         });
@@ -618,7 +1130,9 @@
         
         // Função chamada quando tecla é pressionada no campo peso
         function handleKeyPress(event) {
-            if (event.key === 'Enter') {  // Verifica se é a tecla Enter
+            // event.key - tecla que foi pressionada
+            // 'Enter' é o código para tecla ENTER
+            if (event.key === 'Enter') {
                 calcularIMC();  // Chama a função de cálculo
             }
         }
@@ -630,7 +1144,9 @@
             }
         }
         
-        // Adiciona os listeners de evento aos inputs
+        // addEventListener() - registra um evento (observador)
+        // 'keypress' - evento de tecla pressionada
+        // handlerKeyPress - função a ser chamada
         document.getElementById('peso').addEventListener('keypress', handleKeyPress);
         document.getElementById('altura').addEventListener('keypress', handleAlturaKeyPress);
         
@@ -638,9 +1154,11 @@
         // VALIDAÇÃO EM TEMPO REAL (enquanto digita)
         // ============================================
         
-        // Impede que o usuário digite valores negativos ou letras
+        // 'input' evento dispara CADA VEZ que o usuário digita/remove algo
         document.getElementById('peso').addEventListener('input', function(e) {
-            if (this.value < 0) this.value = 0;
+            // this se refere ao próprio input
+            // this.value < 0: se valor é negativo
+            if (this.value < 0) this.value = 0;  // Força ser 0 (não permite negativo)
         });
         
         document.getElementById('altura').addEventListener('input', function(e) {
@@ -651,10 +1169,11 @@
         // MENSAGEM DE BOAS-VINDAS NO CONSOLE
         // ============================================
         
+        // console.log() com %c - estilo CSS no console (colorido)
         console.log('%c✨ Calculadora de IMC Carregada! ✨', 'color: #667eea; font-size: 16px; font-weight: bold;');
         console.log('%cDigite peso e altura e clique em calcular ou pressione ENTER', 'color: #764ba2; font-size: 12px;');
         
-        // Mostra histórico no console (para desenvolvedores)
+        // Mostra histórico no console (para desenvolvedores verem)
         mostrarHistorico();
         
         // ============================================
@@ -662,7 +1181,25 @@
         // ============================================
         
         // Coloca o cursor automaticamente no campo peso quando a página carrega
+        // Melhor experiência: usuário pode digitar imediatamente
         document.getElementById('peso').focus();
+        
+        /*
+            NOTAS IMPORTANTES SOBRE O CÓDIGO:
+            
+            1. EVENT LOOP: JavaScript é single-thread (uma coisa por vez)
+            2. ASSÍNCRONO: setTimeout, eventos, etc. são filas separadas
+            3. DOM: Document Object Model - representação da página em árvore
+            4. FUNÇÕES: Blocos reutilizáveis de código
+            5. VARIÁVEIS:
+               - var: ESCOPO DE FUNÇÃO (antigo, evitar)
+               - let: ESCOPO DE BLOCO (pode mudar)
+               - const: ESCOPO DE BLOCO (não muda - constante)
+            6. CÓDIGO QUE EXECUTA FORA DE FUNÇÕES:
+               addEventListeners, foco, console.log - executam quando script carrega
+            7. HOISTING: Declarações de função são içadas para o topo
+            8. ESCLAREÇA: Não precisa declarar variáveis com let/const, mas é boa prática
+        */
         
     </script>
 </body>
